@@ -1,0 +1,9 @@
+Steps
+	Open the image in GIMP
+	Add text using the text tool and align the text in the image
+	Right click on the image layer and choose alpha to selection
+	Click on the background image layer 
+	Click on select option from the menu and choose invert option
+	Hide the text layer
+	Export the image
+	
