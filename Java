@@ -1,0 +1,298 @@
+1. Using Naming Conventions
+First and foremost, before writing any code you should specify a set of naming conventions for your Java project, such as how to name classes and interfaces, how to name methods, how to name variables, how to name constants, etc. These conventions must be obeyed by all programmers in your team.
+According to Robert Martin (the author of Clean Code), an identifier (a class, a method, and a variable) should have the following characteristics:
+ 
+Self-explanatory: a name must reveal its intention so everyone can understand and change the code easily. For example, the names dor str do not reveal anything; however the names daysToExpire or inputText do reveal their intention clearly. Note that if a name requires a comment to describe itself, then the name is not self-explanatory.
+ 
+Meaningful distinctions: If names must be different, then they should also mean something different. For example, the names a1 and a2 are meaningless distinction; and the names source and destination are meaningful distinction.  
+Pronounceable: names should be pronounceable as naturally as spoken language because we are humans - very good at words. For example, which name can you pronounce and remember easily: genStamp or generationTimestamp?
+Here are some general naming rules:
+Class and interface names should be nouns, starting with an uppercase letter. For example: Student, Car, Rectangle, Painter, etc.  
+Variable names should be nouns, starting with a lowercase letter. For example: number, counter, birthday, gender, etc.  
+Method names should be verbs, starting with a lowercase letter. For example: run, start, stop, execute, etc.  
+Constant names should have all UPPERCASE letters and words are separated by underscores. For example: MAX_SIZE, MIN_WIDTH, MIN_HEIGHT, etc.  
+Using camelCase notation for names. For example: StudentManager, CarController, numberOfStudents, runAnalysis, etc.
+-------------------------------------------------
+2. Ordering Class Members by Scopes
+The best practice to organize member variables of a class by their scopes from most restrictive to least restrictive. That means we should sort the members by the visibility of the access modifiers: private, default (package), protected, and public. And each group separated by a blank line.
+For example, the following members declaration looks quite messy:
+public class StudentManager {
+    protected List<Student> listStudents;
+    public int numberOfStudents;
+    private String errorMessage;
+    float rowHeight;
+    float columnWidth;
+    protected String[] columnNames;
+    private int numberOfRows;
+    private int numberOfColumns;
+    public String title;
+ 
+}
+According to this best practice, the member declaration above should be sorted out like this:
+
+public class StudentManager {
+    private String errorMessage;
+    private int numberOfColumns;
+    private int numberOfRows;
+ 
+ 
+    float columnWidth;
+    float rowHeight;
+ 
+    protected String[] columnNames;
+    protected List<Student> listStudents;
+ 
+    public int numberOfStudents;
+    public String title;
+ 
+}
+And the members in each group are sorted by alphabetic order. This private-first and public-last style helps us quickly locate member variables when the list grows up over times.
+--------------------------------------------------
+3. Class Members should be private
+According to Joshua Bloch (author of Effective Java), we should minimize the accessibility of class members (fields) as inaccessible as possible. That means we should use the lowest possible access modifier (hence the private modifier) to protect the fields. This practice is recommended in order to enforce information hiding or encapsulation in software design.
+Consider the following class whose fields are made public:
+
+public class Student {
+    public String name;
+    public int age;
+}
+The problem with this poor design is that anyone can change the values of the fields inappropriately. For example:
+
+Student student = new Student();
+student.name = "";
+student.age = 2005;
+Of course we don’t want the name to be empty and the age to be unrealistic. So this practice encourages us to hide the fields and allow the outside code to change them the through setter methods (or mutators). Here’s an example of a better design:
+
+public class Student {
+ 
+    private String name;
+    private int age;
+ 
+    public void setName(String name) {
+        if (name == null || name.equals("")) {
+            throw new IllegalArgumentException("Name is invalid");
+        }
+ 
+        this.name = name;
+    }
+ 
+    public void setAge(int age) {
+        if (age < 1 || age > 100) {
+            throw new IllegalArgumentException("Age is invalid");
+        }
+ 
+        this.age = age;
+    }
+}
+As you can see, the fields name and age are declared to be private so the outside code cannot change them directly (information hiding). And we provide two setter methods setName() and setAge() which always check for valid arguments before actually updating the fields. This ensures the fields always get appropriate values.
+--------------------------------------------------
+4. Avoid Empty Catch Blocks
+
+It’s a very bad habit to leave catch blocks empty, as when the exception is caught by the empty catch block, the program fails in silence, which makes debugging harder. Consider the following program which calculates sum of two numbers from command-line arguments:
+
+public class Sum {
+    public static void main(String[] args) {
+        int a = 0;
+        int b = 0;
+ 
+        try {
+            a = Integer.parseInt(args[0]);
+            b = Integer.parseInt(args[1]);
+ 
+        } catch (NumberFormatException ex) {
+        }
+ 
+        int sum = a + b;
+ 
+        System.out.println("Sum = " + sum);
+    }
+}
+--------------------------------------------------
+5. Using StringBuilder or StringBuffer instead of String Concatenation
+In Java, we use the + operator to join Strings together like this:
+
+public String createTitle(int gender, String name) {
+    String title = "Dear ";
+ 
+    if (gender == 0) {
+        title += "Mr";
+    } else {
+        title += "Mrs";
+    }
+ 
+    return title;
+}
+This is perfectly fine since only few String objects involved. However, with code that involves in concatenating many Strings such as building a complex SQL statements or generating lengthy HTML text, the + operator becomes inefficient as the Java compiler creates many intermediate String objects during the concatenation process.
+Therefore, the best practice recommends using StringBuilder or StringBuffer to replace the + operator for concatenating many String objects together as they modify a String without creating intermediate String objects. StringBuilder is a non-thread safe and StringBuffer is a thread-safe version.
+For example, consider the following code snippet that uses the + operator to build a SQL query:
+
+String sql = "Insert Into Users (name, email, pass, address)";
+sql += " values ('" + user.getName();
+sql += "', '" + user.getEmail();
+sql += "', '" + user.getPass();
+sql += "', '" + user.getAddress();
+sql += "')";
+
+With StringBuilder, we can re-write the above code like this:
+
+StringBuilder sbSql
+    = new StringBuilder("Insert Into Users (name, email, pass, address)");
+ 
+sbSql.append(" values ('").append(user.getName());
+sbSql.append("', '").append(user.getEmail());
+sbSql.append("', '").append(user.getPass());
+sbSql.append("', '").append(user.getAddress());
+sbSql.append("')");
+ 
+String sql = sbSql.toString();
+
+--------------------------------------------------
+6. Using Interface References to Collections
+When declaring collection objects, references to the objects should be as generic as possible. This is to maximize the flexibility and protect the code from possible changes in the underlying collection implementations class. That means we should declare collection objects using their interfaces List, Set, Map, Queue and Deque.
+For example, the following class shows a bad usage of collection references:
+
+public class CollectionsRef {
+ 
+    private HashSet<Integer> numbers;
+ 
+    public ArrayList<String> getList() {
+ 
+        return new ArrayList<String>();
+    }
+ 
+    public void setNumbers(HashSet<Integer> numbers) {
+        this.numbers = numbers;
+    }
+}
+Look at the reference types which are collection implementation classes - this locks the code to work with only these classes HashSet and ArrayList. What if we want the method getList() can return a LinkedList and the method setNumbers() can accept a TreeSet?
+The above class can be improved by replace the class references to interface references like this:
+
+public class CollectionsRef {
+ 
+    private Set<Integer> numbers;
+ 
+    public List<String> getList() {
+        // can return any kind of List
+        return new ArrayList<String>();
+    }
+ 
+    public void setNumbers(Set<Integer> numbers) {
+        // can accept any kind of Set
+        this.numbers = numbers;
+    }
+}
+--------------------------------------------------
+7. You should handle exceptions in the right place, the right place is at the domain level.
+
+WRONG WAY — The data object layer doesn’t know what to do when there is a database exception.
+Java
+class UserDAO{
+    public List<User> getUsers(){
+        try{
+            ps = conn.prepareStatement("SELECT * from users");
+            rs = ps.executeQuery();
+            //return result
+        }catch(Exception e){
+            log.error("exception")
+            return null
+
+        }finally{
+
+        }
+    }}
+
+RECOMMENDED WAY — The data layer should just rethrow the exception and transfer the responsibility to handle the exception or not to the right layer.
+Java
+=== RECOMMENDED WAY ===
+
+Data layer should just retrow the exception and transfer the responsability to handle the exception or not to the right layer.
+
+class UserDAO{
+    public List<User> getUsers(){
+       try{
+          ps = conn.prepareStatement("SELECT * from users");
+          rs = ps.executeQuery();
+          //return result
+       }catch(Exception e){
+        throw new DataLayerException(e);
+       }finally{
+          //release resources
+       }
+   }
+}
+--------------------------------------------------
+8. Exceptions should in general NOT be logged at the point they are thrown, but rather at the point they are actually handled. Logging exceptions when they are thrown or rethrown tends to fill the log files with noise. Also, note that the exception stack trace captures where the exception was generated anyway.
+
+
+--------------------------------------------------
+9. Resource Management
+
+Methods for safely releasing resources:
+The try-with-resources statement ensures that each resource is closed at the end of the statement. Any object that implements java.lang.AutoCloseable, which includes all objects which implement java.io.Closeable, can be used as a resource.
+Java
+
+private doSomething() {
+try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+  try {
+    // business logic
+  }
+}
+
+--------------------------------------------------
+10. Hardcoding
+
+Hardcoding values in code can often lead to multiple side effects. For instance, it can lead to duplication, which makes change more difficult. It can often lead to undesirable behavior if the values need to be dynamic. In most of the cases, hardcoded values can be refactored in one of the following ways:
+
+Consider replacing with constants or enums defined within Java
+Or else, replace with constants defined at the class level or in a separate class file
+If possible, replace with values which can be picked from configuration or environment
+Let's see an example:
+
+private int storeClosureDay = 7;
+
+// This can be refactored to use a constant from Java
+
+private int storeClosureDay = DayOfWeek.SUNDAY.getValue()
+
+Again, there is no strict guideline around this to adhere to. But we must be cognizant about the fact the some will need to read and maintain this code later on. We should pick a convention that suits us and be consistent about it.
+
+--------------------------------------------------
+11. Code Comments
+
+Code comments can be beneficial while reading code to understand the non-trivial aspects. At the same time, care should be taken to not include obvious things in the comments. This can bloat comments making it difficult to read the relevant parts.
+
+--------------------------------------------------
+12. SOLID
+SOLID is a mnemonic acronym that draws from the five principles it sets forth for writing understandable and maintainable software:
+
+Single Responsibility Principle: Every interface, class, or method we define should have a clearly defined goal. In essence, it should ideally do one thing and do that well. This effectively leads to smaller methods and classes which are also testable.
+
+Open-Closed Principle: The code that we write should ideally be open for extension but closed for modification. What this effectively means is that a class should be written in a manner that there should not be any need to modify it. However, it should allow for changes through inheritance or composition.
+
+Liskov Substitution Principle: What this principle states is that every subclass or derived class should be substitutable for their parent or base class. This helps in reducing coupling in the codebase and hence improve reusability across.
+
+Interface Segregation Principle: Implementing an interface is a way to provide a specific behavior to our class. However, a class must not need to implement methods that it does not require. What this requires us to do is to define smaller, more focussed interfaces.
+
+Dependency Inversion Principle: According to this principle, classes should only depend on abstractions and not on their concrete implementations. This effectively means that a class should not be responsible for creating instances for their dependencies. Rather, such dependencies should be injected into the class.
+
+--------------------------------------------------
+13. DRY & KISS
+DRY stands for “Don's Repeat Yourself”. This principle states that a piece of code should not be repeated across the software. The rationale behind this principle is to reduce duplication and increase reusability. However, please note that we should be careful in adopting this rather too literally. Some duplication can actually improve code readability and maintainability.
+
+KISS stands for “Keep It Simple, Stupid”. This principle states that we should try to keep the code as simple as possible. This makes it easy to understand and maintain over time. Following some of the principles mentioned earlier, if we keep our classes and methods focussed and small, this will lead to simpler code.
+
+--------------------------------------------------
+14. Avoid Object Mutability
+The object state and variable values of mutable objects can be changed during their lifecycle. Because many variables can point to the same instance, tracking when and where the object state changed may become difficult. This is a compelling reason to avoid mutable objects whenever possible.
+Immutable objects, on the other hand, do not change their internal state over time, are thread-safe, and have no side effects. Because of these characteristics, immutable objects are especially useful in multi-threaded environments.
+The most basic way to achieve immutability is to make all mutable fields private and final, so that they cannot be iterated once they are initialized. The Spring framework allows you to keep objects immutable by using the constructor dependency injection model.
+
+--------------------------------------------------
+15. Always Check for Parameter Preconditions
+
+You must always validate the input parameters of your public methods before executing any logic to ensure fail tolerance. Java assertions are the best way to validate method parameters. In the following example, if the age is less than zero, an AssertionError is thrown.
+public void setAge(int age) {
+    assert age >= 0 : "Age should be positive";
+}
+Note: To avoid any performance impact on the production system, you can disable assertions at runtime.
+Another option is to use Google Guava, where the Preconditions class can be used to validate the parameters. Guava provides greater flexibility than Java’s basic assertion.
