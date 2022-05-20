@@ -1,0 +1,29 @@
+Brief background
+
+Founded in 2015, KredX was started with the single mission of solving working capital challenges for businesses by utilising an asset lying idle in its balance sheet  -  accounts  receivable  which  once  appropriately  harnessed,  has  the potential to solve working capital issues.The  KredX  suite  of  products  gradually  evolved  from  an  Invoice  Discounting Platform  to  solve  much  bigger  problems  like  early  payments  for  corporate treasuries in the form of Early Payments Technology and CapEx Discounting- a hybrid product, amalgamating the concept of invoice discounting.Today,  KredX  is  India’s  leading  cash  flow  solution  provider,  enabling businesses  and  their  suppliers  with  cashflow  solutions  while  offering investors a unique opportunity to make low-risk and high-returns investment.
+
+
+Problem Statement (Oppurtunity)
+The  growth  engine  of  any  economy  is  the  micro,  small  and  medium  sized enterprises  (MSMEs)  that  creates  the  most  job,  goods  and  services.  In  India, the  number  of  registered  and  unregistered  MSMEs  stands  at  56  Million (approx)  and  these  units  employ  provide  employment  to  124  Million  people. They  contribute  to  31%  of  India’s  GDP  and  form  about  45%  of  total  India Exports.
+
+
+Scope
+However,  debt  requirement  for  India's  MSME  sector  point  to  colossal  credit gaps with total demand far outstripping the available supply of finance from formal  sources.  MSMEs,  India's  growth  engine,  face  a  Rs  16  lakh  crore  credit gap.  As  per  a  study  by  IFC,  only  a  very  small  percentage,  about  16  %  of MSMEs,  are  being  financed  by  the  formal  banking  system.  This  also  meant more  than  80%  of  the  MSME  got  no  form  of  financing  from  the  formal system. Many MSMEs also do not have securities to offer as collateral. It is a case  where  information  is  sketchy,  ability  to  provide  collateral  is  negligible, which  in  turn  makes  it  very  difficult  for  banks  to  offer  a  loan.  Since  2015, KredX  has  been  working  to  bridge  this  working  capital  gap  for  MSMEs  and provide them with timely access to funds.
+
+The  teams  have  came  up  with  a  cashflow prediction model/algorithm. The aim is to help KredX mitigate the credit risk by  identifying  a  MSMEs  good  quality  receivables  through  historical  data. Teams  are  free  to  use  the  conventional  quantitative  data  sources  like company financials, general ledgers, bank statement or they may also choose to  experiment  with  alternative  data  sources  like  sentiment  analysis,  social media etc.
+
+
+Working model
+KredX is an investment model, where in you can start investing, with a minimum amount of 3 Lacs, for a short duration and expect a fixed return at the end of investment duration, which varies between 30 days to 90 days. Returns vary between 12% to 20% annually (as per their marketing material).
+
+KredX charges at fees of 0.15% per month on the invested amount( or may be invested amount+returns made, not sure about this.) This is how KredX makes money.
+
+Whenever SMEs raise invoices, for their service or goods provided, with a Blue Chip company, it usually takes a long time( somewhere between 30 to 60 days) to pay the SME(vendor). This is primarily because Blue Chip companies follow a process, where the invoice goes through various departments in their system before its approved for payment. Now, if a SME wants to get paid as soon as they raise an invoice, they can raise the invoice through KredX and get paid immediately, but at a discounted price. This discount accounts for the returns the investors are expecting at the end of investment duration.
+
+If a SME wants the money immediately, it would make sense to give a higher discount, somewhere around 20%. This is when investors, seeing the investment as a good opportunity, will invest and fund the invoice and the SME will raise the money as soon as possible. If, in case the SME does not want the money immediately or wants only a partial payment, the SME may choose to give a a lesser discount, somewhere around 10%. In this case, not many investors would want to fund the invoice as the returns are not really great and the SME may get a delayed payment (Still faster than getting paid by the Blue chip company) or a partial funding. The point of bringing this up is, KredX does not decide the returns, its depended on the supply and demand of SMEs as well as the investor.
+
+Also, investors are made available the credit history of the SMEs and they know which Blue Chip company was the invoice raised for. KredX also does a verification of the invoice with the Blue Chip Company,gets a posted dated cheque from the SMEs in case of contingencies , operates a self authorized escrow account and helps the investor get back the money in case the Blue Chip company does not pay, for any reason. But, here is the catch, if there is a scenario where the Blue Chip company does not pay and the SME declares bankruptcy, your entire investment is gone.
+
+Taking an example, if a SME wants to get paid against an invoice of 300000 INR, it has to raise this invoice at KredX platform at a discounted percentage. Say the SME decides to give a discount of 15%. Let the investment duration be 3 months, making KredX’s fees, 0.45% (assuming they charge this percentage on invested amount+ returns made). Expected returns, at the end of 3 months, would be 11250 INR. KredX fees at 0.45% would be approx. 1400 INR. Net Realization = 9850 INR in 3 months which works out to be close to 13% annually. ( For the simplicity of calculation I have not taken Service Taxes or any other Tax in the calculation. Offcourse, one has to pay income tax on the returns as well. So returns will be lesser than projected here.)
+
+
