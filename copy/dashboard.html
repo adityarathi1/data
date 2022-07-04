@@ -1,0 +1,55 @@
+ <div class=" heading container-fluid row">
+                <div class="col-lg-3">
+                    <div class="text-heading">Past</div>
+                </div>
+                <div class="col-lg-9">
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal">New Form</button>
+                </div>
+            </div>
+            <div class="container-fluid row">
+                <div class="col-lg-12">
+                    <div class="card border border-primary shadow-0 ">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+				  card's content.
+				</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Survey</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="needs-validation" novalidate>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1">#</span>
+                                    <input type="text" class="form-control" placeholder="Survey Code" aria-label="Survey Code" aria-describedby="basic-addon1">
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="email" class="form-control" id="floatingInput" placeholder="Survey Name">
+                                    <label for="floatingInput">Survey Name</label>
+                                </div>
+								<div class = "row container-fluid">
+								<div class="form-floating mb-3 col-sm-6">
+                                    <input type="email" class="form-control" id="floatingInput" placeholder="Start Date">
+                                    <label for="floatingInput">Start Date</label>
+                                </div>
+								<div class="form-floating mb-3 col-sm-6">
+                                    <input type="email" class="form-control" id="floatingInput" placeholder="End Date">
+                                    <label for="floatingInput">End Date</label>
+                                </div>
+								</div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary">Create</button>
+                        </div>
+                    </div>
+                </div>
+            </div>

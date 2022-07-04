@@ -1,0 +1,56 @@
+<div class="row col-sm-6 wrapper">
+
+	<nav id="optionTabs">
+		<div class="flex items-center justify-between">
+			<button id="edit" class="btn active"
+				onclick="navigateSurveyDiv(this);">Edit</button>
+			<button id="options" class="btn" onclick="navigateSurveyDiv(this);">Options</button>
+			<button id="logic" class="btn" onclick="navigateSurveyDiv(this);">Logic</button>
+
+		</div>
+	</nav>
+	<form id="quesForm" class=" g-3  ">
+		<div class="row">
+			<div class="col-2 quesCol">
+				<input type="text" placeholder="Q. No." class="form-control"
+					id="inputEmail4">
+			</div>
+			<div class="col-6 quesCol">
+				<input type="text" placeholder="Question" class="form-control"
+					id="inputPassword4">
+			</div>
+			<div class="col-4 quesCol btn-group">
+				<button class="btn btn-secondary dropdown-toggle" type="button"
+					id="questionTypeDpdn" data-bs-toggle="dropdown"
+					aria-expanded="false">Question Type</button>
+				<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
+					style="min-width: 500px;"></ul>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-2 quesCol">
+				<span>Answer Genie</span>
+			</div>
+			<div class="col-4"></div>
+			<div class="col-2 quesCol">
+				<select class="form-select"
+					aria-label=".form-select-lg example">
+					<option selected>Select</option>
+					<option value="1">1</option>
+					<option value="3">3</option>
+					<option value="5">5</option>
+					<option value="7">7</option>
+				</select>
+			</div>
+			<div class="col-4 quesCol btn-group">
+				<button class="btn btn-secondary dropdown-toggle" type="button"
+					id="answerTypeDpdn" data-bs-toggle="dropdown"
+					aria-expanded="false">Select Type</button>
+				<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
+					style="min-width: 500px;"></ul>
+			</div>
+		</div>
+	</form>
+
+</div>
+<script src="/survey_page.js"></script>
