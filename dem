@@ -1,0 +1,132 @@
+import pyreadstat
+import pandas as pd
+
+# Sample configuration for complex metrics and SQL-like operations
+metrics_config = {
+    "tables": [
+        {
+            "file": "table1.sas7bdat",
+            "alias": "t1",
+            "columns": ["column_name", "date_column"],  # Columns to select
+            "filters": {
+                "date_column": {"gte": "2023-01-01"},  # Filter for date greater than or equal to
+            },
+            "new_columns": {
+                "new_column": "t1.column_name * 2"  # Example of new column creation
+            }
+        },
+        {
+            "file": "table2.sas7bdat",
+            "alias": "t2",
+            "columns": ["column_name", "value_column"],
+            "join": {
+                "table": "table1.sas7bdat",
+                "on": "t1.column_name = t2.column_name",  # Join condition
+                "how": "inner"  # Type of join
+            },
+            "filters": {
+                "value_column": {"lt": 100}  # Filter for value less than 100
+            }
+        }
+    ],
+    "order_by": "t1.date_column"  # Order by this column
+}
+
+# Function to create a new column based on an expression
+def create_new_column(df, column_name, expression):
+    # Replace references to columns with their respective values
+    for col in df.columns:
+        expression = expression.replace(col, f"df['{col}']")
+    return eval(expression)
+
+# Function to apply filters to a DataFrame
+def apply_filters(df, filters):
+    for column, condition in filters.items():
+        for op, value in condition.items():
+            if op == "gte":
+                df = df[df[column] >= pd.to_datetime(value)]
+            elif op == "lt":
+                df = df[df[column] < value]
+    return df
+
+# Read and process tables according to configuration
+data_frames = {}
+for table_config in metrics_config["tables"]:
+    file_path = table_config["file"]
+    df, meta = pyreadstat.read_sas7bdat(file_path)
+    
+    # Apply filters if any
+    if "filters" in table_config:
+        df = apply_filters(df, table_config["filters"])
+
+    # Create new columns if specified
+    if "new_columns" in table_config:
+        for new_col, expression in table_config["new_columns"].items():
+            df[new_col] = create_new_column(df, new_col, expression)
+
+    data_frames[table_config["alias"]] = df[table_config["columns"]]
+
+# Join DataFrames based on configuration
+final_df = data_frames[metrics_config["tables"][0]["alias"]]  # Start with the first table
+
+for table_config in metrics_config["tables"][1:]:
+    join_df = data_frames[table_config["alias"]]
+    join_on = table_config["join"]["on"].split("=")
+    left_col = join_on[0].strip().split(".")[-1]
+    right_col = join_on[1].strip().split(".")[-1]
+
+    final_df = final_df.merge(join_df, left_on=left_col, right_on=right_col, how=table_config["join"]["how"])
+
+# Apply final filters if any (example could be additional filters)
+if "filters" in metrics_config:
+    final_df = apply_filters(final_df, metrics_config["filters"])
+
+# Order the final DataFrame
+if "order_by" in metrics_config:
+    final_df = final_df.sort_values(by=metrics_config["order_by"])
+
+# Generate HTML report
+html_report = "<!DOCTYPE html>\n"
+html_report += "<html lang='en'>\n"
+html_report += "<head>\n"
+html_report += "    <meta charset='UTF-8'>\n"
+html_report += "    <meta name='viewport' content='width=device-width, initial-scale=1.0'>\n"
+html_report += "    <title>SAS Data Report</title>\n"
+html_report += "    <style>\n"
+html_report += "        table {\n"
+html_report += "            width: 100%;\n"
+html_report += "            border-collapse: collapse;\n"
+html_report += "        }\n"
+html_report += "        th, td {\n"
+html_report += "            border: 1px solid #ddd;\n"
+html_report += "            padding: 8px;\n"
+html_report += "        }\n"
+html_report += "        th {\n"
+html_report += "            background-color: #f2f2f2;\n"
+html_report += "        }\n"
+html_report += "    </style>\n"
+html_report += "</head>\n"
+html_report += "<body>\n"
+html_report += "    <h1>SAS Data Report</h1>\n"
+
+# Render final DataFrame in HTML
+html_report += "<h2>Final Data</h2>\n"
+html_report += "<table>\n"
+html_report += "    <tr>\n"
+html_report += "        " + "".join(f"<th>{col}</th>" for col in final_df.columns) + "\n"
+html_report += "    </tr>\n"
+
+for _, row in final_df.iterrows():
+    html_report += "    <tr>\n"
+    html_report += "        " + "".join(f"<td>{row[col]}</td>" for col in final_df.columns) + "\n"
+    html_report += "    </tr>\n"
+
+html_report += "</table>\n"
+html_report += "</body>\n"
+html_report += "</html>\n"
+
+# Save the report to a file
+with open("report.html", "w") as f:
+    f.write(html_report)
+
+print("Report generated successfully.")
