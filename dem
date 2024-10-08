@@ -12,7 +12,7 @@ metrics_config = {
                 "date_column": {"gte": "2023-01-01"},  # Filter for date greater than or equal to
             },
             "new_columns": {
-                "new_column": "t1.column_name * 2"  # Example of new column creation
+                "new_column": "column_name * 2"  # Example of new column creation, no alias needed
             }
         },
         {
@@ -33,10 +33,7 @@ metrics_config = {
 }
 
 # Function to create a new column based on an expression
-def create_new_column(df, column_name, expression):
-    # Replace references to columns with their respective values
-    for col in df.columns:
-        expression = expression.replace(col, f"df['{col}']")
+def create_new_column(df, expression):
     return eval(expression)
 
 # Function to apply filters to a DataFrame
@@ -62,7 +59,7 @@ for table_config in metrics_config["tables"]:
     # Create new columns if specified
     if "new_columns" in table_config:
         for new_col, expression in table_config["new_columns"].items():
-            df[new_col] = create_new_column(df, new_col, expression)
+            df[new_col] = create_new_column(df, expression)
 
     data_frames[table_config["alias"]] = df[table_config["columns"]]
 
