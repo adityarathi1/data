@@ -6,22 +6,20 @@ metrics_config = {
     "tables": [
         {
             "file": "table1.sas7bdat",
-            "alias": "t1",
             "columns": ["column_name", "date_column"],  # Columns to select
             "filters": {
                 "date_column": {"gte": "2023-01-01"},  # Filter for date greater than or equal to
             },
             "new_columns": {
-                "new_column": "column_name * 2"  # Example of new column creation, no alias needed
+                "new_column": "column_name * 2"  # Example of new column creation
             }
         },
         {
             "file": "table2.sas7bdat",
-            "alias": "t2",
             "columns": ["column_name", "value_column"],
             "join": {
                 "table": "table1.sas7bdat",
-                "on": "t1.column_name = t2.column_name",  # Join condition
+                "on": "column_name",  # Join condition
                 "how": "inner"  # Type of join
             },
             "filters": {
@@ -29,7 +27,7 @@ metrics_config = {
             }
         }
     ],
-    "order_by": "t1.date_column"  # Order by this column
+    "order_by": "date_column"  # Order by this column
 }
 
 # Function to create a new column based on an expression
@@ -61,22 +59,17 @@ for table_config in metrics_config["tables"]:
         for new_col, expression in table_config["new_columns"].items():
             df[new_col] = create_new_column(df, expression)
 
-    data_frames[table_config["alias"]] = df[table_config["columns"]]
+    data_frames[table_config["file"]] = df[table_config["columns"]]
 
 # Join DataFrames based on configuration
-final_df = data_frames[metrics_config["tables"][0]["alias"]]  # Start with the first table
+final_df = data_frames[metrics_config["tables"][0]["file"]]  # Start with the first table
 
 for table_config in metrics_config["tables"][1:]:
-    join_df = data_frames[table_config["alias"]]
-    join_on = table_config["join"]["on"].split("=")
-    left_col = join_on[0].strip().split(".")[-1]
-    right_col = join_on[1].strip().split(".")[-1]
-
-    final_df = final_df.merge(join_df, left_on=left_col, right_on=right_col, how=table_config["join"]["how"])
-
-# Apply final filters if any (example could be additional filters)
-if "filters" in metrics_config:
-    final_df = apply_filters(final_df, metrics_config["filters"])
+    join_df = data_frames[table_config["file"]]
+    join_on = table_config["join"]["on"]
+    
+    # Use the join condition for merging
+    final_df = final_df.merge(join_df, on=join_on, how=table_config["join"]["how"])
 
 # Order the final DataFrame
 if "order_by" in metrics_config:
